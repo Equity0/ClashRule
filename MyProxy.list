@@ -1,0 +1,4 @@
+# 自用代理规则
+
+# 火狐扩展
+DOMAIN-SUFFIX,addons.mozilla.org
