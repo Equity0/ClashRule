@@ -9,3 +9,6 @@ DOMAIN-SUFFIX,download.sublimetext.com
 
 # myblog
 DOMAIN-SUFFIX,dizhlr.site
+
+# Google
+DOMAIN-SUFFIX,dl.google.com
