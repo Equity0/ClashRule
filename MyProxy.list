@@ -6,3 +6,6 @@ DOMAIN-SUFFIX,addons.mozilla.org
 # sublimetext
 DOMAIN-SUFFIX,sublimetext.com
 DOMAIN-SUFFIX,download.sublimetext.com
+
+# myblog
+DOMAIN-SUFFIX,dizhlr.site
