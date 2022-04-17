@@ -1,5 +1,8 @@
 # 自用代理规则
 
+# custom
+DOMAIN-SUFFIX,simscommunity.info
+
 # 火狐扩展
 DOMAIN-SUFFIX,addons.mozilla.org
 
