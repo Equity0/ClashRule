@@ -1,3 +1,6 @@
+# ChatGPT 分流规则 for clash
+# 参考 https://dasmz.com/?p=3105
+# 参考 https://github.com/wgetnz/chatgpt-openclash/blob/main/chatgpt.list
 DOMAIN-SUFFIX,openai.com
 DOMAIN-SUFFIX,chat.openai.com
 DOMAIN-SUFFIX,auth0.openai.com
