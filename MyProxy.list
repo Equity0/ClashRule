@@ -1,17 +1,11 @@
 # 自用代理规则
 
-# custom
-DOMAIN-SUFFIX,simscommunity.info
-
 # 火狐扩展
 DOMAIN-SUFFIX,addons.mozilla.org
 
 # sublimetext
 DOMAIN-SUFFIX,sublimetext.com
 DOMAIN-SUFFIX,download.sublimetext.com
-
-# myblog
-DOMAIN-SUFFIX,dizhlr.site
 
 # 9to5mac
 DOMAIN-SUFFIX,9to5mac.com
