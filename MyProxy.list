@@ -1,5 +1,9 @@
 # 自用代理规则
 
+# Bing
+DOMAIN-SUFFIX,bing.com
+DOMAIN-SUFFIX,cn.bing.com
+
 # 火狐扩展
 DOMAIN-SUFFIX,addons.mozilla.org
 
