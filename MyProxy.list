@@ -1,5 +1,9 @@
 # 自用代理规则
 
+# 解决 Windows 无网络连接
+DOMAIN-SUFFIX,msftconnecttest.com
+DOMAIN-SUFFIX,msftncsi.com
+
 # Bing
 DOMAIN-SUFFIX,bing.com
 DOMAIN-SUFFIX,cn.bing.com
