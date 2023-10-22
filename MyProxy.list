@@ -4,6 +4,9 @@
 DOMAIN-SUFFIX,msftconnecttest.com
 DOMAIN-SUFFIX,msftncsi.com
 
+# 欧易
+DOMAIN-SUFFIX,okx.com
+
 # Bing
 DOMAIN-SUFFIX,bing.com
 DOMAIN-SUFFIX,cn.bing.com
