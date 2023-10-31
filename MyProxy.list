@@ -7,10 +7,6 @@ DOMAIN-SUFFIX,msftncsi.com
 # 欧易
 DOMAIN-SUFFIX,okx.com
 
-# Bing
-DOMAIN-SUFFIX,bing.com
-DOMAIN-SUFFIX,cn.bing.com
-
 # 火狐扩展
 DOMAIN-SUFFIX,addons.mozilla.org
 
