@@ -2,6 +2,8 @@
 # 参考 https://dasmz.com/?p=3105
 # 参考 https://github.com/wgetnz/chatgpt-openclash/blob/main/chatgpt.list
 DOMAIN-KEYWORD,openai
+DOMAIN-SUFFIX,oaistatic.com
+DOMAIN-SUFFIX,oaiusercontent.com
 DOMAIN-SUFFIX,auth0.com
 DOMAIN-SUFFIX,client-api.arkoselabs.com
 DOMAIN-SUFFIX,events.statsigapi.net
