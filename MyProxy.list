@@ -9,3 +9,6 @@ DOMAIN-SUFFIX,okx.com
 
 # 火狐扩展
 DOMAIN-SUFFIX,addons.mozilla.org
+
+# Pikpak
+DOMAIN-SUFFIX,mypikpak.com
