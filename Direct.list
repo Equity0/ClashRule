@@ -7,3 +7,7 @@ DOMAIN-SUFFIX,bitwarden.com
 
 # 22 端口直连
 DST-PORT,22
+
+# BT 端口直连
+DST-PORT,6880-6890
+DST-PORT,16881-16889
