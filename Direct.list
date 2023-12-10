@@ -4,3 +4,6 @@ DOMAIN-SUFFIX,qpic.cn
 DOMAIN-SUFFIX,qlogo.cn
 DOMAIN-SUFFIX,alipayobjects.com
 DOMAIN-SUFFIX,bitwarden.com
+
+# 22 端口直连
+DST-PORT,22
