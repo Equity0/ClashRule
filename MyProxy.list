@@ -12,3 +12,6 @@ DOMAIN-SUFFIX,addons.mozilla.org
 
 # Pikpak
 DOMAIN-SUFFIX,mypikpak.com
+
+# Emby
+DOMAIN-SUFFIX,emby.nexitally.com
