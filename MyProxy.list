@@ -1,4 +1,6 @@
 # 自用代理规则
+DOMAIN-SUFFIX,xn--ngstr-lra8j.com
+DOMAIN-SUFFIX,services.googleapis.cn
 
 # 解决 Windows 无网络连接
 # DOMAIN-SUFFIX,msftconnecttest.com
