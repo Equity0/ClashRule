@@ -5,13 +5,13 @@ DST-PORT,22
 # Clash Meta 可以直接用 DST-PORT,6880-6890
 
 # my
+DOMAIN-SUFFIX,bitwarden.com
 DOMAIN-SUFFIX,wechat.com
 DOMAIN-SUFFIX,ui.com
 DOMAIN-SUFFIX,qq.com
 DOMAIN-SUFFIX,qpic.cn
 DOMAIN-SUFFIX,qlogo.cn
 DOMAIN-SUFFIX,alipayobjects.com
-DOMAIN-SUFFIX,bitwarden.com
 DOMAIN-SUFFIX,oray.com
 DOMAIN,speedtest.im
 DOMAIN,time.is
