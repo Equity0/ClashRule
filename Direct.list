@@ -12,7 +12,14 @@ DOMAIN-SUFFIX,qlogo.cn
 DOMAIN-SUFFIX,alipayobjects.com
 DOMAIN-SUFFIX,bitwarden.com
 DOMAIN-SUFFIX,oray.com
+DOMAIN, speedtest.im
+DOMAIN, time.is
 
+# Microsoft
+DOMAIN, invictusgod-my.sharepoint.com
+DOMAIN-SUFFIX, dns.msftncsi.com
+DOMAIN-SUFFIX, www.msftncsi.com
+DOMAIN-SUFFIX, www.msftconnecttest.com
 # other
 DOMAIN-SUFFIX,71.am
 DOMAIN-SUFFIX,taichi-maker.com
