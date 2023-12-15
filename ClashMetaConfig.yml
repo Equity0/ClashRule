@@ -10,8 +10,8 @@ allow-lan: true
 # #192.168.122.11: 绑定单个IPv4地址
 # #"[aaaa::a8aa:ff:fe09:57d8]": 绑定单个IPv6地址
 bind-address: "*"
-authentication: # http,socks入口的验证用户名，密码
-  - "clash:7bMLMUwJ6a"
+#authentication: # http,socks入口的验证用户名，密码
+#  - "clash:7bMLMUwJ6a"
 skip-auth-prefixes: # 设置跳过验证的IP段
   - 127.0.0.1/8
   - ::1/128
