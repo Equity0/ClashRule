@@ -45,7 +45,7 @@ external-ui-url: "https://github.com/MetaCubeX/metacubexd/archive/refs/heads/gh-
 
 # ============== GeoData ======================
 # 更改geoip使用文件,mmdb或者dat,可选 true/false,true为dat,此项有默认值 false
-geodata-mode: false
+geodata-mode: true
 
 # GEO文件加载模式¶
 # 可选的加载模式如下
