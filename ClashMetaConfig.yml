@@ -65,6 +65,11 @@ geox-url:
   geosite: "https://cdn.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geosite.dat"
   mmdb: "https://cdn.jsdelivr.net/gh/Loyalsoldier/geoip@release/Country.mmdb"
 
+# geo 类别查询目录:
+# geoip.dat 所有类别：https://github.com/Loyalsoldier/geoip/tree/release/text
+# geosite.dat 所有类别：https://github.com/v2fly/domain-list-community/tree/master/data
+# geosite.dat 除了包含原本的所有类别，也包含 [README](https://github.com/Loyalsoldier/v2ray-rules-dat?tab=readme-ov-file#geositedat) 里新增的类别。
+
 # 自定义外部资源下载时使用的的UA,默认为 clash.meta
 # global-ua: clash.meta
 # ==========================================
