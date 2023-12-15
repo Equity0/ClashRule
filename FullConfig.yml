@@ -1,0 +1,288 @@
+# Updated Time: 2023/12/16 00:32:00(UTC+8)
+
+mixed-port: 7890
+# redir-port: 7892 # 透明代理端口，用于 Linux 和 MacOS
+# tproxy-port: 7895 # Transparent proxy server port for Linux (TProxy TCP and TProxy UDP)
+
+# ============================================
+# 允许局域网的其他设备经过 Clash 的代理端口访问互联网
+allow-lan: true 
+# 仅在将allow-lan设置为true时适用
+# #"*": 绑定所有IP地址
+# #192.168.122.11: 绑定单个IPv4地址
+# #"[aaaa::a8aa:ff:fe09:57d8]": 绑定单个IPv6地址
+bind-address: "*"
+#authentication: # http,socks入口的验证用户名，密码
+#  - "clash:7bMLMUwJ6a"
+skip-auth-prefixes: # 设置跳过验证的IP段
+  - 127.0.0.1/8
+  - ::1/128
+
+# ============================================
+mode: rule
+log-level: info
+ipv6: false # 内核不接受 IPv6 流量
+keep-alive-interval: 30 # 控制 Clash 发出 TCP Keep Alive 包的间隔，减少移动设备耗电问题的临时措施。
+
+# ========== 外部控制器 ============================
+# 外部控制器，可以使用 RESTful API 来控制你的 Clash 内核
+external-controller: 0.0.0.0:9090
+#secret: "123456" # RESTful API 的口令 (可选)
+
+# 您可以将静态网页资源（如 clash-dashboard）放置在一个目录中，clash 将会服务于 `RESTful API/ui`
+# 参数应填写配置目录的相对路径或绝对路径。
+# http://127.0.0.1:9090/ui/#/
+# external-ui: folder
+# yacd面板：  https://github.com/haishanh/yacd
+# Razord面板：http://clash.razord.top/#/proxies
+# external-ui: dashboard
+
+# 自定义外部用户界面下载地址
+# 从 GitHub Pages 分支获取
+external-ui-url: "https://github.com/MetaCubeX/metacubexd/archive/refs/heads/gh-pages.zip" 
+
+
+
+# ============== GeoData ======================
+# 更改geoip使用文件,mmdb或者dat,可选 true/false,true为dat,此项有默认值 false
+geodata-mode: false
+
+# GEO文件加载模式¶
+# 可选的加载模式如下
+# standard：标准加载器
+# memconservative：专为内存受限(小内存)设备优化的加载器(默认值)
+geodata-loader: standard
+
+# 自动更新 GEO¶
+geo-auto-update: true
+
+# 更新间隔,单位小时
+geo-update-interval: 24
+
+# 自定 GEO 下载地址
+geox-url:
+  geoip: "https://cdn.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geoip.dat"
+  geosite: "https://cdn.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geosite.dat"
+  mmdb: "https://cdn.jsdelivr.net/gh/Loyalsoldier/geoip@release/Country.mmdb"
+
+# geo 类别查询目录:
+# geoip.dat 所有类别：https://github.com/Loyalsoldier/geoip/tree/release/text
+# geosite.dat 所有类别：https://github.com/v2fly/domain-list-community/tree/master/data
+# geosite.dat 除了包含原本的所有类别，也包含 [README](https://github.com/Loyalsoldier/v2ray-rules-dat?tab=readme-ov-file#geositedat) 里新增的类别。
+
+# 自定义外部资源下载时使用的的UA,默认为 clash.meta
+# global-ua: clash.meta
+# ==========================================
+
+# 全局 TLS 指纹，优先低于 proxy 内的 client-fingerprint。
+# 目前支持开启 TLS 传输的 TCP/grpc/WS/HTTP , 支持协议有 VLESS,Vmess 和 trojan.
+# global-client-fingerprint: random
+
+
+# 在 Clash 官方中，profile 应为扩展配置，但在 Clash.meta, 仅作为缓存项使用
+profile:
+  store-selected: true # 储存 API 对策略组的选择，以供下次启动时使用
+  store-fake-ip: true # 持久化 fake-ip.储存 fakeip 映射表，域名再次发生连接时，使用原有映射地址
+
+tun:
+  enable: true
+  stack: mixed
+  dns-hijack:
+    - any:53
+    - tcp://any:53
+
+dns:
+  enable: true
+  ipv6: false
+  listen: 0.0.0.0:7874 # DNS 服务监听
+  prefer-h3: true # 是否开启 DOH 的 http/3
+  enhanced-mode: fake-ip # Clash 的 DNS 处理模式
+  fake-ip-range: 198.18.0.1/16 # fakeip 下的 IP 段设置
+  fake-ip-filter: # fakeip 过滤，以下地址不会下发 fakeip 映射用于连接
+    - '*.lan'
+    - '+.local'
+    - localhost.ptlogin2.qq.com
+  default-nameserver: # 默认 DNS, 用于解析 DNS 服务器 的域名. 必须为 IP, 可为加密 DNS
+    - 8.8.8.8
+    - 1.0.0.1
+    - 114.114.114.114
+    - 223.5.5.5
+    - system
+  # 指定域名查询的解析服务器，可使用 geosite, 优先于 nameserver/fallback 查询
+  nameserver-policy:
+    'geosite:cn,private':
+      - tls://120.53.53.53
+      - tls://223.5.5.5:853
+      - https://doh.pub/dns-query
+    'geosite:geolocation-!cn':
+      - tls://8.8.4.4
+      - https://dns.google/dns-query
+      - https://1.0.0.1/dns-query
+      - https://jp.tiarap.org/dns-query
+  # 默认的域名解析服务器，如不配置 fallback/proxy-server-nameserver , 则所有域名都由 nameserver 解析
+  # 主要 DNS 配置，影响所有直连，确保使用对大陆解析精准的 DNS
+  nameserver:
+    - tls://120.53.53.53
+    - tls://223.5.5.5:853
+    - https://dns.alidns.com/dns-query
+  # 代理节点域名解析服务器，仅用于解析代理节点的域名
+  proxy-server-nameserver:
+    - https://doh.pub/dns-query
+    - https://dns.alidns.com/dns-query
+  # 后备域名解析服务器，一般情况下使用境外 DNS, 保证结果可信
+  # 配置 fallback 后默认启用 fallback-filter,geoip-code 为 cn
+  fallback:
+    - https://dns.cloudflare.com/dns-query
+    - https://1.1.1.1/dns-query
+    - https://public.dns.iij.jp/dns-query
+    - https://dns.oszx.co/dns-query
+    - https://jp.tiarap.org/dns-query
+    - tls://8.8.4.4
+    - tls://1.1.1.1
+  # 后备域名解析服务器筛选，满足条件的将使用 fallback 结果或只使用 fallback 解析
+  fallback-filter:
+    geoip: true
+    geoip-code: CN # 当 nameserver 域名的 IP 查询 geoip 库为 CN 时会直接采用，否则将被视为被污染,采用 fallback 结果
+    geosite: # geosite 列表的内容被视为已污染，匹配到 geosite 的域名，将只使用 fallback 解析，不去使用 nameserver
+      - gfw
+    ipcidr: # 这些网段的结果会被视为污染，nameserver 解析出这些结果时将会采用 fallback 的解析结果
+      - 0.0.0.0/8
+      - 10.0.0.0/8
+      - 100.64.0.0/10
+      - 127.0.0.0/8
+      - 169.254.0.0/16
+      - 172.16.0.0/12
+      - 192.0.0.0/24
+      - 192.0.2.0/24
+      - 192.88.99.0/24
+      - 192.168.0.0/16
+      - 198.18.0.0/15
+      - 198.51.100.0/24
+      - 203.0.113.0/24
+      - 224.0.0.0/4
+      - 240.0.0.0/4
+      - 255.255.255.255/32
+    domain: # 这些域名被视为已污染，匹配到这些域名，会直接使用 fallback 解析，不去使用 nameserver
+      - '+.google.com'
+      - "+.youtube.com"
+      - "+.facebook.com"
+      - "+.meta.com"
+      - "+.reddit.com"
+      - "+.netflix.com"
+      - "+.hulu.com"
+      - "+.disneyplus.com"
+      - "+.openai.com"
+      - "+.githubusercontent.com"
+      - "+.googlevideo.com"
+      - "+.msftconnecttest.com"
+      - "+.msftncsi.com"
+
+# Loyalsoldier 规则集
+# https://github.com/Loyalsoldier/clash-rules
+rule-providers:
+  # reject:
+  #   type: http
+  #   behavior: domain
+  #   url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/reject.txt"
+  #   path: ./ruleset/reject.yaml
+  #   interval: 86400
+
+  icloud:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/icloud.txt"
+    path: ./ruleset/icloud.yaml
+    interval: 86400
+
+  apple:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/apple.txt"
+    path: ./ruleset/apple.yaml
+    interval: 86400
+
+  # google:
+  #   type: http
+  #   behavior: domain
+  #   url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/google.txt"
+  #   path: ./ruleset/google.yaml
+  #   interval: 86400
+
+  proxy:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/proxy.txt"
+    path: ./ruleset/proxy.yaml
+    interval: 86400
+
+  direct:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/direct.txt"
+    path: ./ruleset/direct.yaml
+    interval: 86400
+
+  private:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/private.txt"
+    path: ./ruleset/private.yaml
+    interval: 86400
+
+  gfw:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/gfw.txt"
+    path: ./ruleset/gfw.yaml
+    interval: 86400
+
+  tld-not-cn:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/tld-not-cn.txt"
+    path: ./ruleset/tld-not-cn.yaml
+    interval: 86400
+
+  telegramcidr:
+    type: http
+    behavior: ipcidr
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/telegramcidr.txt"
+    path: ./ruleset/telegramcidr.yaml
+    interval: 86400
+
+  cncidr:
+    type: http
+    behavior: ipcidr
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/cncidr.txt"
+    path: ./ruleset/cncidr.yaml
+    interval: 86400
+
+  lancidr:
+    type: http
+    behavior: ipcidr
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/lancidr.txt"
+    path: ./ruleset/lancidr.yaml
+    interval: 86400
+
+  applications:
+    type: http
+    behavior: classical
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/applications.txt"
+    path: ./ruleset/applications.yaml
+    interval: 86400
+
+rules:
+  - RULE-SET,applications,DIRECT
+  - DOMAIN,clash.razord.top,DIRECT
+  - DOMAIN,yacd.haishan.me,DIRECT
+  - RULE-SET,private,DIRECT
+  # - RULE-SET,reject,REJECT # 去广告
+  - RULE-SET,icloud,DIRECT
+  - RULE-SET,apple,DIRECT
+  # - RULE-SET,google,DIRECT
+  - RULE-SET,proxy,🚀 节点选择
+  - RULE-SET,direct,DIRECT
+  - RULE-SET,lancidr,DIRECT
+  - RULE-SET,cncidr,DIRECT
+  - RULE-SET,telegramcidr,🚀 节点选择
+  - GEOIP,LAN,DIRECT
