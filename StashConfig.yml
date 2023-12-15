@@ -8,23 +8,6 @@ log-level: info
 ipv6: false # 内核不接受 IPv6 流量
 keep-alive-interval: 30 # 控制 Clash 发出 TCP Keep Alive 包的间隔，减少移动设备耗电问题的临时措施。
 
-# ========== 外部控制器 ============================
-# 外部控制器，可以使用 RESTful API 来控制你的 Clash 内核
-external-controller: 0.0.0.0:9090
-secret: "123456" # RESTful API 的口令 (可选)
-
-# 您可以将静态网页资源（如 clash-dashboard）放置在一个目录中，clash 将会服务于 `RESTful API/ui`
-# 参数应填写配置目录的相对路径或绝对路径。
-# http://127.0.0.1:9090/ui/#/
-external-ui: folder
-# yacd面板：  https://github.com/haishanh/yacd
-# Razord面板：http://clash.razord.top/#/proxies
-# external-ui: dashboard
-
-# 自定义外部用户界面下载地址
-# 从 GitHub Pages 分支获取
-external-ui-url: "https://github.com/MetaCubeX/metacubexd/archive/refs/heads/gh-pages.zip" 
-
 # ============================================
 # 允许局域网的其他设备经过 Clash 的代理端口访问互联网
 allow-lan: true 
@@ -36,25 +19,22 @@ bind-address: "*"
 
 # ============== Geoip ======================
 # 更改geoip使用文件,mmdb或者dat,可选 true/false,true为dat,此项有默认值 false
-# geodata-mode: true
+geodata-mode: false
 
-# GEO文件加载模式¶
+# GEO文件加载模式
 # 可选的加载模式如下
 # standard：标准加载器
 # memconservative：专为内存受限(小内存)设备优化的加载器(默认值)
-# geodata-loader: memconservative
+geodata-loader: memconservative
 
-# 自动更新 GEO¶
-# geo-auto-update: false
-
-# 更新间隔,单位小时
-# geo-update-interval: 24
+geo-auto-update: true # 自动更新 GEO
+geo-update-interval: 24 # 更新间隔,单位小时
 
 # 自定 GEO 下载地址
-# geox-url:
+geox-url:
 #   geoip: "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geoip.dat"
 #   geosite: "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geosite.dat"
-#   mmdb: "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/country.mmdb"
+  mmdb: "https://cdn.jsdelivr.net/gh/Loyalsoldier/geoip@release/Country.mmdb"
 
 # 自定义外部资源下载时使用的的UA,默认为 clash.meta
 # global-ua: clash.meta
@@ -66,20 +46,20 @@ bind-address: "*"
 
 
 # 在 Clash 官方中，profile 应为扩展配置，但在 Clash.meta, 仅作为缓存项使用
-profile:
-  store-selected: true # 储存 API 对策略组的选择，以供下次启动时使用
-  store-fake-ip: true # 储存 fakeip 映射表，域名再次发生连接时，使用原有映射地址
+#profile:
+#  store-selected: true # 储存 API 对策略组的选择，以供下次启动时使用
+#  store-fake-ip: true # 储存 fakeip 映射表，域名再次发生连接时，使用原有映射地址
 
 tun:
   enable: true
-  stack: mixed
+  stack: system
   dns-hijack:
     - any:53
     - tcp://any:53
 
 dns:
   enable: true
-  ipv6: false
+  ipv6: true
   listen: 0.0.0.0:7874 # DNS 服务监听
   prefer-h3: true # 是否开启 DOH 的 http/3
   enhanced-mode: fake-ip # Clash 的 DNS 处理模式
@@ -94,12 +74,11 @@ dns:
     - 223.5.5.5
   # 指定域名查询的解析服务器，可使用 geosite, 优先于 nameserver/fallback 查询
   nameserver-policy:
-    'geosite:cn,private':
+    'geoip:cn,private':
       - tls://120.53.53.53
       - tls://223.5.5.5:853
       - https://doh.pub/dns-query
     'geosite:geolocation-!cn':
-      - tls://8.8.4.4
       - https://dns.google/dns-query
       - https://1.0.0.1/dns-query
   # 默认的域名解析服务器，如不配置 fallback/proxy-server-nameserver , 则所有域名都由 nameserver 解析
@@ -115,20 +94,13 @@ dns:
   # 配置 fallback 后默认启用 fallback-filter,geoip-code 为 cn
   fallback:
     - https://dns.cloudflare.com/dns-query
-    - https://1.1.1.1/dns-query
+    - https://1.0.0.1/dns-query
     - https://public.dns.iij.jp/dns-query
-    - https://dns.oszx.co/dns-query
-    - https://jp.tiar.app/dns-query
     - https://jp.tiarap.org/dns-query
-    - https://dns.oszx.co/dns-query
-    - tls://8.8.4.4
-    - tls://1.1.1.1
   # 后备域名解析服务器筛选，满足条件的将使用 fallback 结果或只使用 fallback 解析
   fallback-filter:
     geoip: true
     geoip-code: CN # geoip-code 配置的国家的结果会直接采用，否则将被视为被污染,采用 fallback 结果
-    geosite: # geosite 列表的内容被视为已污染，匹配到 geosite 的域名，将只使用 fallback解析，不去使用 nameserver
-      - gfw
     ipcidr: # 这些网段的结果会被视为污染，nameserver 解析出这些结果时将会采用 fallback 的解析结果
       - 0.0.0.0/8
       - 10.0.0.0/8
