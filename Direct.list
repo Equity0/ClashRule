@@ -18,7 +18,8 @@ DOMAIN-SUFFIX,edu.cn
 # RemoteDesktop
 DOMAIN-SUFFIX,todesk.com
 DOMAIN-SUFFIX,orayimg.com
-DOMAIN-SUFFIX,webchat.7moor.com
+DOMAIN-KEYWORD,7moor
+
 
 # Microsoft
 # DOMAIN,invictusgod-my.sharepoint.com
