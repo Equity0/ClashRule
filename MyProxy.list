@@ -6,14 +6,8 @@ DOMAIN-SUFFIX,services.googleapis.cn
 # DOMAIN-SUFFIX,msftconnecttest.com
 # DOMAIN-SUFFIX,msftncsi.com
 
-# 欧易
-DOMAIN-SUFFIX,okx.com
-
 # 火狐扩展
 DOMAIN-SUFFIX,addons.mozilla.org
-
-# Pikpak
-DOMAIN-SUFFIX,mypikpak.com
 
 # Emby
 DOMAIN-SUFFIX,emby.nexitally.com
