@@ -6,12 +6,12 @@ tproxy-port: 7895
 mode: rule
 log-level: info
 ipv6: false # 内核不接受 IPv6 流量
+keep-alive-interval: 30 # 控制 Clash 发出 TCP Keep Alive 包的间隔，减少移动设备耗电问题的临时措施。
 
+# ========== 外部控制器 ============================
 # 外部控制器，可以使用 RESTful API 来控制你的 Clash 内核
 external-controller: 0.0.0.0:9090
-
-# RESTful API 的口令 (可选)
-secret: "123456"
+secret: "123456" # RESTful API 的口令 (可选)
 
 # 您可以将静态网页资源（如 clash-dashboard）放置在一个目录中，clash 将会服务于 `RESTful API/ui`
 # 参数应填写配置目录的相对路径或绝对路径。
@@ -25,7 +25,8 @@ external-ui: folder
 # 从 GitHub Pages 分支获取
 external-ui-url: "https://github.com/MetaCubeX/metacubexd/archive/refs/heads/gh-pages.zip" 
 
-# 允许局域网的连接（可用来共享代理）
+# ============================================
+# 允许局域网的其他设备经过 Clash 的代理端口访问互联网
 allow-lan: true 
 # 仅在将allow-lan设置为true时适用
 # #"*": 绑定所有IP地址
@@ -33,7 +34,7 @@ allow-lan: true
 # #"[aaaa::a8aa:ff:fe09:57d8]": 绑定单个IPv6地址
 bind-address: "*"
 
-# ============== Geoip
+# ============== Geoip ======================
 # 更改geoip使用文件,mmdb或者dat,可选 true/false,true为dat,此项有默认值 false
 # geodata-mode: true
 
@@ -55,17 +56,26 @@ bind-address: "*"
 #   geosite: "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geosite.dat"
 #   mmdb: "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/country.mmdb"
 
-# 自定全局UA¶
 # 自定义外部资源下载时使用的的UA,默认为 clash.meta
-global-ua: clash.meta
+# global-ua: clash.meta
+# ==========================================
 
 # 全局 TLS 指纹，优先低于 proxy 内的 client-fingerprint。
 # 目前支持开启 TLS 传输的 TCP/grpc/WS/HTTP , 支持协议有 VLESS,Vmess 和 trojan.
-global-client-fingerprint: random
+# global-client-fingerprint: random
 
-# 储存 API 对策略组的选择，以供下次启动时使用
+
+# 在 Clash 官方中，profile 应为扩展配置，但在 Clash.meta, 仅作为缓存项使用
 profile:
-  store-selected: true
+  store-selected: true # 储存 API 对策略组的选择，以供下次启动时使用
+  store-fake-ip: true # 储存 fakeip 映射表，域名再次发生连接时，使用原有映射地址
+
+tun:
+  enable: true
+  stack: mixed
+  dns-hijack:
+    - any:53
+    - tcp://any:53
 
 dns:
   enable: true
@@ -79,23 +89,28 @@ dns:
     - '+.local'
     - localhost.ptlogin2.qq.com
   default-nameserver: # 默认 DNS, 用于解析 DNS 服务器 的域名. 必须为 IP, 可为加密 DNS
-    - https://120.53.53.53/dns-query
-    - tls://120.53.53.53
-    - tls://223.5.5.5:853
-    - https://223.5.5.5/dns-query
+    - 1.1.1.1
+    - 114.114.114.114
+    - 223.5.5.5
   # 指定域名查询的解析服务器，可使用 geosite, 优先于 nameserver/fallback 查询
   nameserver-policy:
     'geosite:cn,private':
       - tls://120.53.53.53
       - tls://223.5.5.5:853
       - https://doh.pub/dns-query
-    'geosite:geolocation-!cn': 
+    'geosite:geolocation-!cn':
       - tls://8.8.4.4
+      - https://dns.google/dns-query
       - https://1.0.0.1/dns-query
   # 默认的域名解析服务器，如不配置 fallback/proxy-server-nameserver , 则所有域名都由 nameserver 解析
   nameserver:
     - tls://120.53.53.53
     - tls://223.5.5.5:853
+    - https://dns.alidns.com/dns-query
+  # 代理节点域名解析服务器，仅用于解析代理节点的域名
+  proxy-server-nameserver:
+    - https://doh.pub/dns-query
+    - https://dns.alidns.com/dns-query
   # 后备域名解析服务器，一般情况下使用境外 DNS, 保证结果可信
   # 配置 fallback 后默认启用 fallback-filter,geoip-code 为 cn
   fallback:
