@@ -8,6 +8,3 @@ DOMAIN-SUFFIX,services.googleapis.cn
 
 # 火狐扩展
 DOMAIN-SUFFIX,addons.mozilla.org
-
-# Emby
-DOMAIN-SUFFIX,emby.nexitally.com
