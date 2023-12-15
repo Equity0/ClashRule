@@ -271,18 +271,18 @@ rule-providers:
     path: ./ruleset/applications.yaml
     interval: 86400
 
-rules:
-  - RULE-SET,applications,DIRECT
-  - DOMAIN,clash.razord.top,DIRECT
-  - DOMAIN,yacd.haishan.me,DIRECT
-  - RULE-SET,lancidr,DIRECT
-  - RULE-SET,private,DIRECT
-  - RULE-SET,direct,DIRECT
-  - RULE-SET,cncidr,DIRECT
-  # - RULE-SET,reject,REJECT # 去广告
-  - RULE-SET,icloud,DIRECT
-  - RULE-SET,apple,DIRECT
-  # - RULE-SET,google,DIRECT
-  - RULE-SET,proxy,🚀 节点选择
-  - RULE-SET,telegramcidr,🚀 节点选择
-  - GEOIP,LAN,DIRECT
+# rules:
+#   - RULE-SET,applications,DIRECT
+#   - DOMAIN,clash.razord.top,DIRECT
+#   - DOMAIN,yacd.haishan.me,DIRECT
+#   - RULE-SET,lancidr,DIRECT
+#   - RULE-SET,private,DIRECT
+#   - RULE-SET,direct,DIRECT
+#   - RULE-SET,cncidr,DIRECT
+#   # - RULE-SET,reject,REJECT # 去广告
+#   - RULE-SET,icloud,DIRECT
+#   - RULE-SET,apple,DIRECT
+#   # - RULE-SET,google,DIRECT
+#   - RULE-SET,proxy,🚀 节点选择
+#   - RULE-SET,telegramcidr,🚀 节点选择
+#   - GEOIP,LAN,DIRECT
