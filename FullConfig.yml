@@ -96,9 +96,9 @@ dns:
   ipv6: false
   listen: 0.0.0.0:7874 # DNS 服务监听
   prefer-h3: true # 是否开启 DOH 的 http/3
-  enhanced-mode: fake-ip # Clash 的 DNS 处理模式
-  fake-ip-range: 198.18.0.1/16 # fakeip 下的 IP 段设置
-  fake-ip-filter: # fakeip 过滤，以下地址不会下发 fakeip 映射用于连接
+  enhanced-mode: redir-host # Clash 的 DNS 处理模式
+  # fake-ip-range: 198.18.0.1/16 # fakeip 下的 IP 段设置
+  # fake-ip-filter: # fakeip 过滤，以下地址不会下发 fakeip 映射用于连接
     - '*.lan'
     - '+.local'
     - localhost.ptlogin2.qq.com
