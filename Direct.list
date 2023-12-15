@@ -6,18 +6,17 @@ DST-PORT,22
 
 # my
 DOMAIN-SUFFIX,bitwarden.com
-DOMAIN-SUFFIX,wechat.com
 DOMAIN-SUFFIX,ui.com
-DOMAIN-SUFFIX,qq.com
 DOMAIN-SUFFIX,qpic.cn
 DOMAIN-SUFFIX,qlogo.cn
-DOMAIN-SUFFIX,alipayobjects.com
 DOMAIN-SUFFIX,oray.com
-DOMAIN,speedtest.im
 DOMAIN,time.is
+DOMAIN,speedtest.im
+DOMAIN-SUFFIX,speedtest.cn
+DOMAIN-SUFFIX,edu.cn
 
 # Microsoft
-DOMAIN,invictusgod-my.sharepoint.com
-DOMAIN,dns.msftncsi.com
-DOMAIN,www.msftncsi.com
-DOMAIN,www.msftconnecttest.com
+# DOMAIN,invictusgod-my.sharepoint.com
+# DOMAIN,dns.msftncsi.com
+# DOMAIN,www.msftncsi.com
+# DOMAIN,www.msftconnecttest.com
