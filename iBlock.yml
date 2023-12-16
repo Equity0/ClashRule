@@ -1,0 +1,22 @@
+mode: rule
+log-level: info
+keep-alive-interval: 30 # 控制 Clash 发出 TCP Keep Alive 包的间隔，减少移动设备耗电问题的临时措施。
+
+dns:
+  default-nameserver: # 默认 DNS, 用于解析 DNS 服务器 的域名. 仅填写 DNS 服务器的 IP 地址
+    - system
+  # 默认的域名解析服务器，如不配置 fallback/proxy-server-nameserver , 则所有域名都由 nameserver 解析
+  nameserver:
+    - system
+  # 跳过证书验证，解决部分兼容性问题 https://help.nextdns.io/t/g9hdkjz
+  skip-cert-verify: true
+  # 在以下列表的域名将不会被解析为 fake ip，这些域名相关的解析请求将会返回它们真实的 IP 地址
+  fake-ip-filter: 
+    - '*.lan'
+    - '+.local'
+    - localhost.ptlogin2.qq.com
+    # Stun Services
+    - '+.stun.*.*'
+    - '+.stun.*.*.*'
+    - '+.stun.*.*.*.*'
+    - '+.stun.*.*.*.*.*'
