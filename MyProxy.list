@@ -8,3 +8,10 @@ DOMAIN-SUFFIX,services.googleapis.cn
 
 # 火狐扩展
 DOMAIN-SUFFIX,addons.mozilla.org
+
+# linkvertise
+DOMAIN-SUFFIX,linkvertise.com
+DOMAIN-SUFFIX,hcaptcha.com
+DOMAIN-SUFFIX,sentry.io
+DOMAIN-KEYWORD,chargebee
+DOMAIN-KEYWORD,bizseasky.com
