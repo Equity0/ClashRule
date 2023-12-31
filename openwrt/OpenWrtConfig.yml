@@ -18,6 +18,12 @@ skip-auth-prefixes: # 设置跳过验证的IP段
   - 127.0.0.1/8
   - ::1/128
 
+#  find-process-mode has 3 values:always, strict, off
+#  - always, 开启，强制匹配所有进程
+#  - strict, 默认，由 mihomo 判断是否开启
+#  - off, 不匹配进程，推荐在路由器上使用此模式
+find-process-mode: off
+
 # ============================================
 mode: rule
 log-level: info
@@ -45,7 +51,7 @@ external-ui-url: "https://github.com/MetaCubeX/metacubexd/archive/refs/heads/gh-
 
 # ============== GeoData ======================
 # 更改geoip使用文件,mmdb或者dat,可选 true/false,true为dat,此项有默认值 false
-geodata-mode: true
+geodata-mode: false
 
 # GEO文件加载模式
 # 可选的加载模式如下
@@ -71,13 +77,15 @@ geox-url:
 # geosite.dat 除了包含原本的所有类别，也包含 [README](https://github.com/Loyalsoldier/v2ray-rules-dat?tab=readme-ov-file#geositedat) 里新增的类别。
 
 # 自定义外部资源下载时使用的的UA,默认为 clash.meta
-# global-ua: clash.meta
+global-ua: clash.meta
 # ==========================================
 
 # 全局 TLS 指纹，优先低于 proxy 内的 client-fingerprint。
 # 目前支持开启 TLS 传输的 TCP/grpc/WS/HTTP , 支持协议有 VLESS,Vmess 和 trojan.
-# global-client-fingerprint: random
+global-client-fingerprint: random
 
+# 更换延迟计算方式，通过去除握手等额外开销来降低延迟数值
+unified-delay: true
 
 # 在 Clash 官方中，profile 应为扩展配置，但在 Clash.meta, 仅作为缓存项使用
 profile:
@@ -90,6 +98,25 @@ tun:
   dns-hijack:
     - any:53
     - tcp://any:53
+
+# 嗅探域名 可选配置，处理一些直接通过IP连接的应用，比如 Telegram
+sniffer:
+  enable: true
+  force-dns-mapping: true       # 对 redir-host 类型识别的流量进行强制嗅探,如：Tun、Redir 和 TProxy 并 DNS 为 redir-host 皆属于
+  parse-pure-ip: true           # 对所有未获取到域名的流量进行强制嗅探
+  override-destination: false   # 是否使用嗅探结果作为实际访问，默认为 true
+  sniff:
+    HTTP:
+      ports: [80, 8080-8880]
+      override-destination: true
+    TLS:
+      ports: [443, 8443]
+    QUIC:
+      ports: [443, 8443]
+  force-domain:                 # 需要强制嗅探的域名（默认情况下只对IP进行嗅探）
+    - +.v2ex.com
+  skip-domain:                  # 需要跳过嗅探的域名。主要解决部分站点sni字段非域名，导致嗅探结果异常的问题，如米家设备Mijia Cloud   
+    - Mijia Cloud
 
 dns:
   enable: true
@@ -107,24 +134,28 @@ dns:
     - 1.0.0.1
     - 114.114.114.114
     - 223.5.5.5
-    - system
-  # 指定域名查询的解析服务器，可使用 geosite, 优先于 nameserver/fallback 查询
+  # 指定域名查询的解析服务器，可使用 geosite, 优先于 nameserver/fallback 查询，如果没有查询到则使用 nameserver 和 fallback 并发查询
   nameserver-policy:
-    'geosite:cn,private':
+    'geosite:cn,private,apple':
       - tls://120.53.53.53
       - tls://223.5.5.5:853
       - https://doh.pub/dns-query
+      - https://dns.alidns.com/dns-query
     'geosite:geolocation-!cn':
       - tls://8.8.4.4
-      - https://dns.google/dns-query
-      - https://1.0.0.1/dns-query
-      - https://jp.tiarap.org/dns-query
+      - tls://1.1.1.1
+      - https://dns.cloudflare.com/dns-query
+      - https://1.1.1.1/dns-query
   # 默认的域名解析服务器，如不配置 fallback/proxy-server-nameserver , 则所有域名都由 nameserver 解析
   # 主要 DNS 配置，影响所有直连，确保使用对大陆解析精准的 DNS
   nameserver:
-    - tls://120.53.53.53
-    - tls://223.5.5.5:853
-    - https://dns.alidns.com/dns-query
+    - 114.114.114.114 # default value
+    - 8.8.8.8 # default value
+    - tls://223.5.5.5:853 # DNS over TLS
+    - https://doh.pub/dns-query # DNS over HTTPS
+    - https://dns.alidns.com/dns-query#h3=true # 强制 HTTP/3，与 perfer-h3 无关，强制开启 DoH 的 HTTP/3 支持，若不支持将无法使用
+    - https://mozilla.cloudflare-dns.com/dns-query#DNS&h3=true # 指定策略组和使用 HTTP/3
+    - quic://dns.adguard.com:784 # DNS over QUIC
   # 代理节点域名解析服务器，仅用于解析代理节点的域名
   proxy-server-nameserver:
     - https://doh.pub/dns-query
