@@ -132,14 +132,17 @@ dns:
   default-nameserver: # 默认 DNS, 用于解析 DNS 服务器 的域名. 必须为 IP, 可为加密 DNS
     - 8.8.8.8
     - 1.0.0.1
-    - 114.114.114.114
+    - 119.29.29.29
+    - 101.226.4.6
     - 223.5.5.5
   # 指定域名查询的解析服务器，可使用 geosite, 优先于 nameserver/fallback 查询，如果没有查询到则使用 nameserver 和 fallback 并发查询
   nameserver-policy:
     'geosite:cn,private,apple':
+      - 119.29.29.29
+      - 101.226.4.6
+      - https://doh.pub/dns-query
       - tls://120.53.53.53
       - tls://223.5.5.5:853
-      - https://doh.pub/dns-query
       - https://dns.alidns.com/dns-query
     'geosite:geolocation-!cn':
       - tls://8.8.4.4
@@ -149,7 +152,8 @@ dns:
   # 默认的域名解析服务器，如不配置 fallback/proxy-server-nameserver , 则所有域名都由 nameserver 解析
   # 主要 DNS 配置，影响所有直连，确保使用对大陆解析精准的 DNS
   nameserver:
-    - 114.114.114.114 # default value
+    - 119.29.29.29
+    - 101.226.4.6
     - 8.8.8.8 # default value
     - tls://223.5.5.5:853 # DNS over TLS
     - https://doh.pub/dns-query # DNS over HTTPS
