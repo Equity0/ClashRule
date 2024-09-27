@@ -118,7 +118,8 @@
           "🇺🇲 美国",
           "🇯🇵 日本",
           "🇸🇬 新加坡",
-          "{all}"
+          "{all}",
+          "block-out"
         ],
         "default": "♻️ 自动选择"
       },
@@ -126,7 +127,8 @@
         "type": "urltest",
         "tag": "♻️ 自动选择",
         "outbounds": [
-          "{all}"
+          "{all}",
+          "block-out"
         ],
         "filter":[
           {"action":"exclude","keywords":["网站|地址|剩余|过期|时间|有效"]}
@@ -157,7 +159,8 @@
         "type": "urltest",
         "tag": "🇭🇰 香港",
         "outbounds": [
-          "{all}"
+          "{all}",
+          "block-out"
         ],
         "filter":[
           {"action":"include","keywords":["🇭🇰|HK|hk|香港|港|HongKong"]}
@@ -170,7 +173,8 @@
         "type": "urltest",
         "tag": "🇼🇸 台湾",
         "outbounds": [
-          "{all}"
+          "{all}",
+          "block-out"
         ],
         "filter":[
             {"action":"include","keywords":["🇹🇼|TW|tw|台湾|臺灣|台|Taiwan"]}
@@ -183,7 +187,8 @@
         "type": "urltest",
         "tag": "🇺🇲 美国",
         "outbounds": [
-          "{all}"
+          "{all}",
+          "block-out"
         ],
         "filter":[
           {"action":"include","keywords":["🇺🇸|US|us|美国|美|United States"]}
@@ -196,7 +201,8 @@
         "type": "urltest",
         "tag": "🇯🇵 日本",
         "outbounds": [
-          "{all}"
+          "{all}",
+          "block-out"
         ],
         "filter":[
           {"action":"include","keywords":["🇯🇵|JP|jp|日本|日|Japan"]}
@@ -209,7 +215,8 @@
         "type": "urltest",
         "tag": "🇸🇬 新加坡",
         "outbounds": [
-          "{all}"
+          "{all}",
+          "block-out"
         ],
         "filter":[
           {"action":"include","keywords":["🇸🇬|SG|sg|新加坡|狮|Singapore"]}
@@ -222,7 +229,8 @@
         "type": "urltest",
         "tag": "🇰🇷 韩国",
         "outbounds": [
-          "{all}"
+          "{all}",
+          "block-out"
         ],
         "filter":[
           {"action":"include","keywords":["🇰🇷|KR|kr|韩国|首尔|韩|韓|Korea"]}
@@ -243,7 +251,6 @@
           "🇯🇵 日本",
           "🇸🇬 新加坡",
           "🇰🇷 韩国",
-          "Hysteria2",
           "{all}"
         ]
       }
