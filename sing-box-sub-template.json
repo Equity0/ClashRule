@@ -24,7 +24,7 @@
         {
           "tag": "google",
           "address": "https://dns.google/dns-query",
-          "address_resolver": "default-dns",
+          "address_resolver": "dns_resolver",
           "address_strategy": "ipv4_only",
           "strategy": "ipv4_only",
           "client_subnet": "1.0.1.0"
