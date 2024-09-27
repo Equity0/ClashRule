@@ -58,9 +58,15 @@
           "server": "google"
         },
         {
-          "rule_set": "geosite-cn",
-          "server": "default-dns"
-        }
+            "domain_keyword" : [
+              "msftconnecttest"
+            ],
+            "domain" : [
+              "go.microsoft.com"
+            ],
+            "rule_set": "geosite-cn",
+            "server": "default-dns"
+          }
       ],
       "strategy": "prefer_ipv4",
       "final": "google",
