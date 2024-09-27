@@ -1,0 +1,378 @@
+{
+    "log": {
+      "level": "info",
+      "timestamp": true
+    },
+    "experimental": {
+      "cache_file": {
+        "enabled": true,
+        "store_fakeip": false
+      },
+      "clash_api": {
+        "external_controller": "127.0.0.1:9090",
+        "external_ui": "dashboard"
+      }
+    },
+    "dns": {
+      "servers": [
+        {
+          "tag": "default-dns",
+          "address": "h3://dns.alidns.com/dns-query",
+          "detour": "direct-out",
+          "address_resolver": "dns_resolver"
+        },
+        {
+          "tag": "google",
+          "address": "https://dns.google/dns-query",
+          "address_resolver": "dns_resolver",
+          "address_strategy": "ipv4_only",
+          "strategy": "ipv4_only",
+          "client_subnet": "1.0.1.0"
+        },
+        {
+          "tag": "block",
+          "address": "rcode://success"
+        },
+        {
+          "tag": "dns_resolver",
+          "address": "223.5.5.5",
+          "detour": "direct-out"
+        }
+      ],
+      "rules": [
+        {
+          "rule_set": "geosite-category-ads-all",
+          "server": "block"
+        },
+        {
+          "outbound": "any", 
+          "server": "default-dns",
+          "disable_cache": true
+        },
+        {
+          "clash_mode": "direct",
+          "server": "default-dns"
+        },
+        {
+          "clash_mode": "global",
+          "server": "google"
+        },
+        {
+            "domain_keyword" : [
+              "msftconnecttest"
+            ],
+            "domain" : [
+              "go.microsoft.com"
+            ],
+            "rule_set": "geosite-cn",
+            "server": "default-dns"
+          }
+      ],
+      "strategy": "prefer_ipv4",
+      "final": "google",
+      "independent_cache": true
+    },
+    "ntp": {
+      "enabled": true,
+      "interval": "30m0s",
+      "server": "time.apple.com",
+      "server_port": 123,
+      "detour": "direct-out"
+    },
+    "inbounds": [
+      {
+        "type": "tun",
+        "tag": "tun-in",
+        "auto_route": true,
+        "strict_route": true,
+        "stack": "mixed",
+        "inet4_address": "172.18.0.1/30",
+        "inet6_address": "fdfe:dcba:9876::1/126",
+        "sniff": true
+      },
+      {
+        "type": "mixed",
+        "tag": "mixed-in",
+        "listen": "127.0.0.1",
+        "listen_port": 2080,
+        "sniff": true
+      }
+    ],
+    "outbounds": [
+      {
+        "type": "direct",
+        "tag": "direct-out"
+      },
+      {
+        "type": "block",
+        "tag": "block-out"
+      },
+      {
+        "type": "dns",
+        "tag": "dns-out"
+      },
+      {
+        "type": "selector",
+        "tag": "🚀 节点选择",
+        "outbounds": [
+          "direct-out",
+          "♻️ 自动选择",
+          "自建",
+          "🇭🇰 香港",
+          "🇼🇸 台湾",
+          "🇺🇲 美国",
+          "🇯🇵 日本",
+          "🇸🇬 新加坡",
+          "{all}",
+          "block-out"
+        ],
+        "default": "自建"
+      },
+      {
+        "type": "urltest",
+        "tag": "♻️ 自动选择",
+        "outbounds": [
+          "{all}",
+          "block-out"
+        ],
+        "filter":[
+          {"action":"exclude","keywords":["网站|地址|剩余|过期|时间|有效"]}
+        ],
+        "url": "http://www.gstatic.com/generate_204",
+        "interval": "5m0s",
+        "tolerance": 50
+      },
+      {
+        "tag": "AdBlock",
+        "type": "selector",
+        "outbounds": [
+          "block-out",
+          "direct-out"
+        ]
+      },
+      {
+        "type": "selector",
+        "tag": "🎥 奈飞视频",
+        "outbounds": [
+          "direct-out",  
+          "🇭🇰 香港",
+          "🇸🇬 新加坡"
+        ],
+        "default": "🇭🇰 香港"
+      },
+      {
+        "type": "urltest",
+        "tag": "自建",
+        "outbounds": [
+          "{all}",
+          "block-out"
+        ],
+        "filter":[
+          {"action":"include","keywords":["自建|自"]}
+        ],
+        "url": "http://www.gstatic.com/generate_204",
+        "interval": "5m0s",
+        "tolerance": 50
+      },
+      {
+        "type": "urltest",
+        "tag": "🇭🇰 香港",
+        "outbounds": [
+          "{all}",
+          "block-out"
+        ],
+        "filter":[
+          {"action":"include","keywords":["🇭🇰|HK|hk|香港|港|HongKong"]}
+        ],
+        "url": "http://www.gstatic.com/generate_204",
+        "interval": "5m0s",
+        "tolerance": 50
+      },
+      {
+        "type": "urltest",
+        "tag": "🇼🇸 台湾",
+        "outbounds": [
+          "{all}",
+          "block-out"
+        ],
+        "filter":[
+            {"action":"include","keywords":["🇹🇼|TW|tw|台湾|臺灣|台|Taiwan"]}
+        ],
+        "url": "http://www.gstatic.com/generate_204",
+        "interval": "5m0s",
+        "tolerance": 50
+      },
+      {
+        "type": "urltest",
+        "tag": "🇺🇲 美国",
+        "outbounds": [
+          "{all}",
+          "block-out"
+        ],
+        "filter":[
+          {"action":"include","keywords":["🇺🇸|US|us|美国|美|United States"]}
+        ],
+        "url": "http://www.gstatic.com/generate_204",
+        "interval": "5m0s",
+        "tolerance": 50
+      },
+      {
+        "type": "urltest",
+        "tag": "🇯🇵 日本",
+        "outbounds": [
+          "{all}",
+          "block-out"
+        ],
+        "filter":[
+          {"action":"include","keywords":["🇯🇵|JP|jp|日本|日|Japan"]}
+        ],
+        "url": "http://www.gstatic.com/generate_204",
+        "interval": "5m0s",
+        "tolerance": 50
+      },
+      {
+        "type": "urltest",
+        "tag": "🇸🇬 新加坡",
+        "outbounds": [
+          "{all}",
+          "block-out"
+        ],
+        "filter":[
+          {"action":"include","keywords":["🇸🇬|SG|sg|新加坡|狮|Singapore"]}
+        ],
+        "url": "http://www.gstatic.com/generate_204",
+        "interval": "5m0s",
+        "tolerance": 50
+      },
+      {
+        "type": "urltest",
+        "tag": "🇰🇷 韩国",
+        "outbounds": [
+          "{all}",
+          "block-out"
+        ],
+        "filter":[
+          {"action":"include","keywords":["🇰🇷|KR|kr|韩国|首尔|韩|韓|Korea"]}
+        ],
+        "url": "http://www.gstatic.com/generate_204",
+        "interval": "5m0s",
+        "tolerance": 50
+      },
+      {
+        "type": "selector",
+        "tag": "GLOBAL",
+        "outbounds": [
+          "direct-out",
+          "♻️ 自动选择",
+          "🇭🇰 香港",
+          "🇼🇸 台湾",
+          "🇺🇲 美国",
+          "🇯🇵 日本",
+          "🇸🇬 新加坡",
+          "🇰🇷 韩国",
+          "{all}"
+        ]
+      }
+    ],
+    "route": {
+      "final": "🚀 节点选择",
+      "auto_detect_interface": true,
+      "rules": [
+        {
+          "rule_set": "geosite-category-ads-all",
+          "outbound": "AdBlock"
+        },
+        {
+          "inbound": "dns-in",
+          "outbound": "dns-out"
+        },
+        {
+          "protocol": "dns",
+          "outbound": "dns-out"
+        },
+        {
+          "clash_mode": "direct",
+          "outbound": "direct-out"
+        },
+        {
+          "clash_mode": "global",
+          "outbound": "GLOBAL"
+        },
+        {
+          "ip_is_private": true,
+          "outbound": "direct-out"
+        },
+        {
+          "rule_set": "geosite-netflix",
+          "outbound": "🎥 奈飞视频"
+        },
+        {
+          "rule_set": ["geosite-google@cn", "geosite-apple@cn", "geosite-microsoft@cn", "geosite-category-games@cn"],
+          "outbound": "direct-out"
+        },
+        {
+          "rule_set": ["geoip-cn", "geosite-cn"],
+          "outbound": "direct-out"
+        }
+      ],
+      "rule_set": [
+          {
+            "tag": "geosite-category-ads-all",
+            "type": "remote",
+            "format": "binary",
+            "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-category-ads-all.srs",
+            "download_detour": "♻️ 自动选择"
+          },
+          {
+            "tag": "geosite-cn",
+            "type": "remote",
+            "format": "binary",
+            "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-cn.srs",
+            "download_detour": "♻️ 自动选择"
+          },
+          {
+            "tag": "geoip-cn",
+            "type": "remote",
+            "format": "binary",
+            "url": "https://raw.githubusercontent.com/SagerNet/sing-geoip/rule-set/geoip-cn.srs",
+            "download_detour": "♻️ 自动选择"
+          },
+          {
+            "tag": "geosite-google@cn",
+            "type": "remote",
+            "format": "binary",
+            "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-google%40cn.srs",
+            "download_detour": "♻️ 自动选择"
+          },
+          {
+            "tag": "geosite-apple@cn",
+            "type": "remote",
+            "format": "binary",
+            "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-apple%40cn.srs",
+            "download_detour": "♻️ 自动选择"
+          },
+          {
+            "tag": "geosite-microsoft@cn",
+            "type": "remote",
+            "format": "binary",
+            "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-microsoft%40cn.srs",
+            "download_detour": "♻️ 自动选择"
+          },
+          {
+            "tag": "geosite-category-games@cn",
+            "type": "remote",
+            "format": "binary",
+            "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-category-games%40cn.srs",
+            "download_detour": "♻️ 自动选择"
+          },
+          {
+            "tag": "geosite-netflix",
+            "type": "remote",
+            "format": "binary",
+            "url": "https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-netflix.srs",
+            "download_detour": "♻️ 自动选择"
+          }
+        ]
+    }
+  }
+  
