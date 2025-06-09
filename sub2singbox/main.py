@@ -283,7 +283,7 @@ def process_template(template_source, configurations):
     # 定义关键词列表（小写）
     hk_keywords = ['香港', '港', 'hk', 'hong kong', 'hongkong', 'hkong', 'h.k', 'h k']
     sg_keywords = ['新加坡', '狮', 'singapore', 'sg', '星洲', '星国', '新加', '新']
-    tw_keywords = ['tw', 'taiwan', '台湾', '台', '新北', '彰化']
+    tw_keywords = ['tw', 'taiwan', '台湾', '台','臺灣', '新北', '彰化']
     us_keywords = ['us', 'u s', 'united states', '美国', '美', '波特兰', '达拉斯', '俄勒冈', '凤凰城', '费利蒙', '硅谷', '拉斯维加斯', '洛杉矶', '圣何塞', '圣克拉拉', '西雅图', '芝加哥']
     jp_keywords = ['jp','j p', '日','日本', 'japan', '东京', '大阪', '埼玉']
 

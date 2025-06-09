@@ -89,21 +89,15 @@
       "outbounds": [
         "direct",
         "Auto",
+        "🇭🇰 香港",
+        "🇼🇸 台湾",
+        "🇸🇬 新加坡",
+        "🇯🇵 日本",
+        "🇺🇲 美国",
         {sub_outbounds}
       ],
       "default": "Auto",
       "interrupt_exist_connections": true
-    },
-    {
-      "type": "urltest",
-      "tag": "Auto",
-      "outbounds": [
-        {sub_outbounds_HK},
-        {sub_outbounds_JP}
-      ],
-      "url": "https://www.gstatic.com/generate_204",
-      "interval": "3m0s",
-      "tolerance": 60
     },
     {
       "type": "selector",
@@ -136,6 +130,66 @@
       "outbounds": [
         {sub_outbounds_TW}
       ]
+    },
+    {
+      "type": "urltest",
+      "tag": "Auto",
+      "outbounds": [
+        {sub_outbounds}
+      ],
+      "url": "https://www.gstatic.com/generate_204",
+      "interval": "6m0s",
+      "tolerance": 60
+    },
+    {
+      "type": "urltest",
+      "tag": "🇭🇰 香港",
+      "outbounds": [
+        {sub_outbounds_HK}
+      ],
+      "url": "https://www.gstatic.com/generate_204",
+      "interval": "3m0s",
+      "tolerance": 60
+    },
+    {
+      "type": "urltest",
+      "tag": "🇼🇸 台湾",
+      "outbounds": [
+        {sub_outbounds_TW}
+      ],
+      "url": "https://www.gstatic.com/generate_204",
+      "interval": "3m0s",
+      "tolerance": 60
+    },
+    {
+      "type": "urltest",
+      "tag": "🇸🇬 新加坡",
+      "outbounds": [
+        {sub_outbounds_SG}
+      ],
+      "url": "https://www.gstatic.com/generate_204",
+      "interval": "3m0s",
+      "tolerance": 60
+    },
+    {
+      "type": "urltest",
+      "tag": "🇯🇵 日本",
+      "outbounds": [
+        {sub_outbounds_JP}
+      ],
+      "url": "https://www.gstatic.com/generate_204",
+      "interval": "3m0s",
+      "tolerance": 60
+    },
+    {
+      "type": "urltest",
+      "tag": "🇺🇲 美国",
+      "outbounds": [
+        {sub_outbounds_US}
+      ],
+      "url": "https://www.gstatic.com/generate_204",
+      "interval": "3m0s",
+      "tolerance": 60
     },
     {sub_outbounds_ALL}
   ],
