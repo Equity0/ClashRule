@@ -33,7 +33,6 @@
           "GeoSite-Private",
           "GeoSite-Microsoft-CN",
           "GeoSite-Apple-CN",
-          "GeoSite-SteamGames-Download-CN",
           "GeoSite-CN"
         ],
         "server": "local"
@@ -117,27 +116,7 @@
     },
     {
       "type": "selector",
-      "tag": "Steam-游戏下载",
-      "default": "direct",
-      "interrupt_exist_connections": true,
-      "outbounds": [
-        "direct",
-        "Proxy"
-      ]
-    },
-    {
-      "type": "selector",
-      "tag": "steam!CN",
-      "default": "Proxy",
-      "interrupt_exist_connections": true,
-      "outbounds": [
-        "direct",
-        "Proxy"
-      ]
-    },
-    {
-      "type": "selector",
-      "tag": "Video",
+      "tag": "Netflix",
       "default": "Proxy",
       "outbounds": [
         "Proxy",
@@ -190,29 +169,10 @@
         "outbound": "AI-!CN"
       },
       {
-        "domain": [
-          "best.besttelecom.cc"
-        ],
         "rule_set": [
-          "GeoSite-Youtube",
           "GeoSite-Netflix"
         ],
-        "outbound": "Video"
-      },
-      {
-        "domain_suffix": [
-          "steamcontent.com"
-        ],
-        "rule_set": [
-          "GeoSite-SteamGames-Download-CN"
-        ],
-        "outbound": "Steam-游戏下载"
-      },
-      {
-        "rule_set": [
-          "GeoSite-Steam-!CN"
-        ],
-        "outbound": "steam!CN"
+        "outbound": "Netflix"
       },
       {
         "rule_set": [
@@ -242,34 +202,6 @@
       },
       {
         "type": "remote",
-        "tag": "GeoSite-Category-Games-!CN",
-        "format": "binary",
-        "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/category-games-!cn.srs",
-        "download_detour": "direct"
-      },
-      {
-        "type": "remote",
-        "tag": "GeoSite-Steam",
-        "format": "binary",
-        "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/steam.srs",
-        "download_detour": "direct"
-      },
-      {
-        "type": "remote",
-        "tag": "GeoSite-SteamGames-Download-CN",
-        "format": "source",
-        "url": "https://testingcf.jsdelivr.net/gh/Equity0/ClashRule@sing/geosite/steamgames-download@cn.json",
-        "download_detour": "direct"
-      },
-      {
-        "type": "remote",
-        "tag": "GeoSite-Steam-!CN",
-        "format": "source",
-        "url": "https://testingcf.jsdelivr.net/gh/Equity0/ClashRule@sing/geosite/steam-!cn.json",
-        "download_detour": "direct"
-      },
-      {
-        "type": "remote",
         "tag": "GeoSite-Apple-CN",
         "format": "binary",
         "url": "https://testingcf.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-apple@cn.srs",
@@ -284,23 +216,9 @@
       },
       {
         "type": "remote",
-        "tag": "GeoSite-Youtube",
-        "format": "binary",
-        "url": "https://testingcf.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-youtube.srs",
-        "download_detour": "direct"
-      },
-      {
-        "type": "remote",
         "tag": "GeoSite-Netflix",
         "format": "binary",
         "url": "https://testingcf.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-netflix.srs",
-        "download_detour": "direct"
-      },
-      {
-        "type": "remote",
-        "tag": "Category-Ads",
-        "format": "binary",
-        "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/category-ads-all.srs",
         "download_detour": "direct"
       },
       {
