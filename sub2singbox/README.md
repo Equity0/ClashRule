@@ -1,5 +1,4 @@
 # sub2singbox
------
 
 将订阅转换为 [sing-box](https://github.com/SagerNet/sing-box) 配置文件
 
