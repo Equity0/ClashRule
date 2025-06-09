@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "domain_suffix": [
+          "wmsj.cn",
+          "wmsjsteam.com",
+          "client-update.queniuqe.com",
+          "clngaa.com",
+          "bscstorage.net",
+          "eccdnx.com",
+          "pinyuncloud.com",
+          "8686c.com",
+          "aliyuncs.com",
+          "alicdn.com",
+          "aliyuncdn.com",
+          "cdngslb.com",
+          "myalicdn.com",
+          "alibaba.cdn.steampipe.steamcontent.com",
+          "queniujq.cn",
+          "pphimalayanrg.com",
+          "steamchina.com",
+          "gstore.val.manlaxy.com",
+          "tnkjmec.com"
+        ]
+    }
+  ]
+}

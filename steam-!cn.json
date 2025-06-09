@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "domain": [
+        "store.steampowered.com"
+      ],
+      "domain_suffix": [
+        "steamcommunity.com",
+        "steamstatic.com"
+      ]
+    }
+  ]
+}
