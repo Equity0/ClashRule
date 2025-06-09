@@ -282,7 +282,11 @@ def process_template(template_source, configurations):
 
     # 定义关键词列表（小写）
     hk_keywords = ['香港', '港', 'hk', 'hong kong', 'hongkong', 'hkong', 'h.k', 'h k']
-    sg_keywords = ['新加坡', '狮', 'singapore', 'sg', '星洲', '星国', '新加', '新嘉坡']
+    sg_keywords = ['新加坡', '狮', 'singapore', 'sg', '星洲', '星国', '新加', '新']
+    tw_keywords = ['tw', 'taiwan', '台湾', '台', '新北', '彰化']
+    us_keywords = ['us', 'u s', 'united states', '美国', '美', '波特兰', '达拉斯', '俄勒冈', '凤凰城', '费利蒙', '硅谷', '拉斯维加斯', '洛杉矶', '圣何塞', '圣克拉拉', '西雅图', '芝加哥']
+    jp_keywords = ['jp','j p', '日','日本', 'japan', '东京', '大阪', '埼玉']
+
 
     # 提取所有tag值（带双引号）
     all_tags = extract_outbounds(configurations)
@@ -291,6 +295,9 @@ def process_template(template_source, configurations):
     hk_tags = extract_outbounds(configurations, hk_keywords)
     not_hk_tags = extract_outbounds(configurations, hk_keywords, exclude=True)
     sg_tags = extract_outbounds(configurations, sg_keywords)
+    tw_tags = extract_outbounds(configurations, tw_keywords)
+    us_tags = extract_outbounds(configurations, us_keywords)
+    jp_tags = extract_outbounds(configurations, jp_keywords)
 
     # 格式化配置对象列表 - 修复引号问题
     configs_formatted = format_configurations(configurations)
@@ -301,6 +308,9 @@ def process_template(template_source, configurations):
     result = result.replace("{sub_outbounds_HK}", hk_tags)
     result = result.replace("{sub_outbounds_!HK}", not_hk_tags)
     result = result.replace("{sub_outbounds_SG}", sg_tags)
+    result = result.replace("{sub_outbounds_TW}", tw_tags)
+    result = result.replace("{sub_outbounds_US}", us_tags)
+    result = result.replace("{sub_outbounds_JP}", jp_tags)
     result = result.replace("{sub_outbounds_ALL}", configs_formatted)
 
     return result

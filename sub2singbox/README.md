@@ -30,7 +30,13 @@ python ./main.py 订阅模板 订阅源(可多个)
 
 `{sub_outbounds_HK}` 所有香港节点
 
-`{sub_outbounds_!HK}` 所有**非**香港节点
+`{sub_outbounds_!HK}` 所有*非*香港节点
+
+`{sub_outbounds_TW}` 所有台湾节点
 
 `{sub_outbounds_SG}` 所有新加坡节点
+
+`{sub_outbounds_JP}` 所有日本节点
+
+`{sub_outbounds_US}` 所有美国节点
 

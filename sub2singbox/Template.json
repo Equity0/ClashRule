@@ -98,12 +98,12 @@
       "type": "urltest",
       "tag": "Auto",
       "outbounds": [
-        {sub_outbounds_HK}
+        {sub_outbounds_HK},
+        {sub_outbounds_JP}
       ],
       "url": "https://www.gstatic.com/generate_204",
       "interval": "3m0s",
-      "tolerance": 60,
-      "interrupt_exist_connections": true
+      "tolerance": 60
     },
     {
       "type": "selector",
@@ -121,8 +121,21 @@
         "Proxy",
         {sub_outbounds_HK},
         {sub_outbounds_SG}
-      ],
-      "interrupt_exist_connections": true
+      ]
+    },
+    {
+      "type": "selector",
+      "tag": "HBO",
+      "outbounds": [
+        {sub_outbounds_US}
+      ]
+    },
+    {
+      "type": "selector",
+      "tag": "巴哈姆特",
+      "outbounds": [
+        {sub_outbounds_TW}
+      ]
     },
     {sub_outbounds_ALL}
   ],
@@ -175,6 +188,18 @@
       },
       {
         "rule_set": [
+          "GeoSite-HBO"
+        ],
+        "outbound": "HBO"
+      },
+      {
+        "rule_set": [
+          "GeoSite-bahamut"
+        ],
+        "outbound": "巴哈姆特"
+      },
+      {
+        "rule_set": [
           "GeoSite-Private",
           "GeoSite-Microsoft-CN",
           "GeoSite-Apple-CN",
@@ -218,6 +243,20 @@
         "tag": "GeoSite-Netflix",
         "format": "binary",
         "url": "https://testingcf.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-netflix.srs",
+        "download_detour": "direct"
+      },
+      {
+        "type": "remote",
+        "tag": "GeoSite-HBO",
+        "format": "binary",
+        "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/hbo.srs",
+        "download_detour": "direct"
+      },
+      {
+        "type": "remote",
+        "tag": "GeoSite-bahamut",
+        "format": "binary",
+        "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/bahamut.srs",
         "download_detour": "direct"
       },
       {
