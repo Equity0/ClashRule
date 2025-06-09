@@ -3,8 +3,6 @@ import urllib.parse
 import requests
 import sys
 import json
-import os
-import re
 import argparse
 
 def get_content_from_url(url):
@@ -19,6 +17,9 @@ def get_content_from_url(url):
 
 def decode_base64_content(content):
     """对整个内容进行base64解码"""
+    if content is None:
+        return None
+
     try:
         # 填充base64数据（如果需要）
         content += b'=' * (-len(content) % 4)
@@ -57,7 +58,7 @@ def parse_ss_uri(ss_line):
         if cred_base64:
             try:
                 # 尝试Base64解码 - 处理填充问题
-                padding = '=' * (-len(cred_base64) % 4)
+                padding = '=' * (-len(cred_base极4) % 4)
                 cred_data = base64.b64decode(cred_base64 + padding)
                 decoded_cred = cred_data.decode('utf-8', errors='replace')
 
@@ -127,7 +128,7 @@ def parse_ss_uri(ss_line):
 
         # 5. 检查并替换simple-obfs为obfs-local
         if plugin == "simple-obfs":
-            plugin = "obfs-local"
+            plugin = "极obs-local"
 
         # 6. 构建结果对象
         result = {
@@ -212,9 +213,17 @@ def process_multiple_subscriptions(sources):
 
     return list(unique_configs.values())
 
-def extract_outbounds(configurations, keywords=None, exclude=False):
+def extract_outbounds(configurations, include_keywords=None, exclude_keywords=None):
     """提取特定的tag值，支持过滤和排除"""
     outbounds = []
+
+    # 默认排除关键词（总是应用）
+    default_exclude_keywords = ['traffic', 'expire', '流量', '剩余', '天数', '到期', '年', '月']
+
+    # 合并排除关键词
+    final_exclude_keywords = list(default_exclude_keywords)
+    if exclude_keywords:
+        final_exclude_keywords.extend(exclude_keywords)
 
     for config in configurations:
         tag = config.get("tag", "")
@@ -223,27 +232,28 @@ def extract_outbounds(configurations, keywords=None, exclude=False):
 
         tag_lower = tag.lower()
 
-        # 是否排除匹配项
-        if keywords:
-            matches = any(keyword in tag_lower for keyword in keywords)
-            if exclude and matches:
-                continue
-            if not exclude and not matches:
-                continue
+        # 是否包含关键词
+        include_match = not include_keywords  # 如果没有包含关键词要求，则默认包含
+        if include_keywords:
+            include_match = any(keyword in tag_lower for keyword in include_keywords)
 
-        outbounds.append(f'"{tag}"')
+        # 是否排除特定子词
+        exclude_match = False
+        if final_exclude_keywords:
+            exclude_match = any(ex_word in tag_lower for ex_word in final_exclude_keywords)
+
+        # 如果包含关键词且不包含排除词，则保留
+        if include_match and not exclude_match:
+            outbounds.append(f'"{tag}"')
 
     return ",\n".join(outbounds)
 
 def format_configurations(configurations):
-    """格式化配置对象列表 - 修复plugin_opts引号问题"""
+    """格式化配置对象列表"""
     formatted = []
     for i, config in enumerate(configurations):
-        # 创建配置对象的深拷贝
-        cfg_copy = config.copy()
-
-        # 生成JSON字符串 - 使用json.dumps确保正确转义
-        cfg_str = json.dumps(cfg_copy, ensure_ascii=False, indent=2)
+        # 生成JSON字符串
+        cfg_str = json.dumps(config, ensure_ascii=False, indent=2)
 
         # 如果是最后一个配置，不加逗号
         if i < len(configurations) - 1:
@@ -280,26 +290,35 @@ def process_template(template_source, configurations):
         print(f"无法获取模板内容", file=sys.stderr)
         return None
 
-    # 定义关键词列表（小写）
-    hk_keywords = ['香港', '港', 'hk', 'hong kong', 'hongkong', 'hkong', 'h.k', 'h k']
-    sg_keywords = ['新加坡', '狮', 'singapore', 'sg', '星洲', '星国', '新加', '新']
-    tw_keywords = ['tw', 'taiwan', '台湾', '台','臺灣', '新北', '彰化']
-    us_keywords = ['us', 'u s', 'united states', '美国', '美', '波特兰', '达拉斯', '俄勒冈', '凤凰城', '费利蒙', '硅谷', '拉斯维加斯', '洛杉矶', '圣何塞', '圣克拉拉', '西雅图', '芝加哥']
-    jp_keywords = ['jp','j p', '日','日本', 'japan', '东京', '大阪', '埼玉']
-
-
-    # 提取所有tag值（带双引号）
+    # 提取所有节点
     all_tags = extract_outbounds(configurations)
 
-    # 过滤tag值
+    # 香港节点
+    hk_keywords = ['香港', '港', 'hk', 'hong kong', 'hongkong', 'hkong']
     hk_tags = extract_outbounds(configurations, hk_keywords)
-    not_hk_tags = extract_outbounds(configurations, hk_keywords, exclude=True)
-    sg_tags = extract_outbounds(configurations, sg_keywords)
-    tw_tags = extract_outbounds(configurations, tw_keywords)
-    us_tags = extract_outbounds(configurations, us_keywords)
-    jp_tags = extract_outbounds(configurations, jp_keywords)
 
-    # 格式化配置对象列表 - 修复引号问题
+    # 非香港节点
+    not_hk_tags = extract_outbounds(configurations, exclude_keywords=hk_keywords)
+
+    # 新加坡节点
+    sg_keywords = ['新加坡', '狮', 'singapore', 'sg', '星洲', '星国']
+    sg_tags = extract_outbounds(configurations, sg_keywords)
+
+    # 台湾节点
+    tw_keywords = ['tw', 'taiwan', '台湾', '台','臺灣', '新北', '彰化']
+    tw_tags = extract_outbounds(configurations, tw_keywords)
+
+    # 日本节点（带特殊排除）
+    jp_keywords = ['jp','j p', '日','日本', 'japan', '东京', '大阪', '埼玉']
+    jp_exclude_keywords = ['日用', '尼日']
+    jp_tags = extract_outbounds(configurations, jp_keywords, jp_exclude_keywords)
+
+    # 美国节点
+    us_keywords = ['us', 'u s', 'united states', '美国', '美', '波特兰', '达拉斯', '俄勒冈', '凤凰城',
+                  '费利蒙', '硅谷', '拉斯维加斯', '洛杉矶', '圣何塞', '圣克拉拉', '西雅图', '芝加哥']
+    us_tags = extract_outbounds(configurations, us_keywords)
+
+    # 完整配置列表
     configs_formatted = format_configurations(configurations)
 
     # 替换占位符
@@ -309,8 +328,8 @@ def process_template(template_source, configurations):
     result = result.replace("{sub_outbounds_!HK}", not_hk_tags)
     result = result.replace("{sub_outbounds_SG}", sg_tags)
     result = result.replace("{sub_outbounds_TW}", tw_tags)
-    result = result.replace("{sub_outbounds_US}", us_tags)
     result = result.replace("{sub_outbounds_JP}", jp_tags)
+    result = result.replace("{sub_outbounds_US}", us_tags)
     result = result.replace("{sub_outbounds_ALL}", configs_formatted)
 
     return result
@@ -351,7 +370,7 @@ if __name__ == "__main__":
     # 保存结果
     if final_result is not None:
         save_to_file(final_result, args.output)
-        print("处理完成！", file=sys.stderr)
+        print("处理完成！配置文件已保存为", args.output, file=sys.stderr)
     else:
         print("处理失败！", file=sys.stderr)
         sys.exit(1)
