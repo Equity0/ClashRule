@@ -25,12 +25,12 @@ def decode_base64_content(content):
         content += b'=' * (-len(content) % 4)
         return base64.b64decode(content).decode('utf-8')
     except Exception as e:
-        print(f"Base64解码失败: {e}", file=sys.stderr)
+        print(f"Base64解码失败: {e}", file=sys.st极derr)
         return None
 
-def parse_ss_uri(ss_line):
+def parse_ss_uri(ss_line):  # 使用正确的函数参数名
     """核心解析函数：确保精确处理凭据部分"""
-    if not ss_line.startswith("ss://"):
+    if not ss_line.startswith("ss://"):  # 使用正确的变量名
         return None
 
     try:
@@ -58,7 +58,7 @@ def parse_ss_uri(ss_line):
         if cred_base64:
             try:
                 # 尝试Base64解码 - 处理填充问题
-                padding = '=' * (-len(cred_base极4) % 4)
+                padding = '=' * (-len(cred_base64) % 4)
                 cred_data = base64.b64decode(cred_base64 + padding)
                 decoded_cred = cred_data.decode('utf-8', errors='replace')
 
@@ -82,16 +82,14 @@ def parse_ss_uri(ss_line):
 
         # 分离服务器信息和插件参数
         if "?" in server_full:
-            server_info, plugin_info = server_full.split("?", 1)
-            # 只取plugin参数部分
-            if "&" in plugin_info:
-                plugin_info = plugin_info.split("&", 1)[0]
-            if "#" in plugin_info:
-                plugin_info = plugin_info.split("#", 1)[0]
+            server_info, query_string = server_full.split("?", 1)
 
-            # 解析插件参数
-            if plugin_info.startswith("plugin="):
-                plugin_full = plugin_info[7:]
+            # 解析查询字符串参数
+            query_params = urllib.parse.parse_qs(query_string)
+
+            # 获取plugin参数
+            if 'plugin' in query_params:
+                plugin_full = query_params['plugin'][0]
                 plugin_full = urllib.parse.unquote(plugin_full)
 
                 # 分割插件名和选项
@@ -119,16 +117,18 @@ def parse_ss_uri(ss_line):
 
             # 尝试提取数字端口
             try:
+                # 移除可能的查询参数
                 port_str = port_str.split("?")[0].split("&")[0].split("#")[0]
                 port = int(port_str)
             except ValueError:
-                port = None
+                print(f"端口解析失败: {port_str}", file=sys.stderr)
+                return None
         else:
             server = server_info
 
         # 5. 检查并替换simple-obfs为obfs-local
         if plugin == "simple-obfs":
-            plugin = "极obs-local"
+            plugin = "obfs-local"
 
         # 6. 构建结果对象
         result = {
@@ -183,7 +183,7 @@ def process_subscription(source):
     for line in lines:
         line = line.strip()
         if line and line.startswith("ss://"):
-            parsed = parse_ss_uri(line)
+            parsed = parse_ss_uri(line)  # 使用正确的函数参数
             if parsed:
                 results.append(parsed)
 
