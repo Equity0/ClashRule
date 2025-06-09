@@ -1,0 +1,360 @@
+{
+  "log": {
+    "level": "error",
+    "timestamp": true
+  },
+  "dns": {
+    "servers": [
+      {
+        "tag": "local",
+        "address": "223.5.5.5",
+        "detour": "direct"
+      },
+      {
+        "tag": "remote",
+        "address": "fakeip"
+      }
+    ],
+    "rules": [
+      {
+        "outbound": "any",
+        "server": "local"
+      },
+      {
+        "clash_mode": "direct",
+        "server": "local"
+      },
+      {
+        "clash_mode": "global",
+        "server": "remote"
+      },
+      {
+        "rule_set": [
+          "GeoSite-Private",
+          "GeoSite-Microsoft-CN",
+          "GeoSite-Apple-CN",
+          "GeoSite-SteamGames-Download-CN",
+          "GeoSite-CN"
+        ],
+        "server": "local"
+      },
+      {
+        "query_type": [
+          "A",
+          "AAAA"
+        ],
+        "server": "remote"
+      }
+    ],
+    "fakeip": {
+      "enabled": true,
+      "inet4_range": "198.18.0.0/15",
+      "inet6_range": "fc00::/18"
+    }
+  },
+  "inbounds": [
+    {
+      "type": "tun",
+      "tag": "tun-in",
+      "address": [
+        "172.18.0.1/30",
+        "fdfe:dcba:9876::1/126"
+      ],
+      "auto_route": true,
+      "auto_redirect": true,
+      "strict_route": true,
+      "stack": "gvisor",
+      "platform": {
+        "http_proxy": {
+          "enabled": true,
+          "server": "127.0.0.1",
+          "server_port": 7890
+        }
+      }
+    },
+    {
+      "type": "mixed",
+      "tag": "mixed-in",
+      "listen": "127.0.0.1",
+      "listen_port": 7890,
+      "tcp_fast_open": true
+    }
+  ],
+  "outbounds": [
+    {
+      "type": "direct",
+      "tag": "direct"
+    },
+    {
+      "type": "selector",
+      "tag": "Proxy",
+      "outbounds": [
+        "direct",
+        "Auto",
+        {sub_outbounds}
+      ],
+      "default": "Auto",
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "urltest",
+      "tag": "Auto",
+      "outbounds": [
+        {sub_outbounds_HK}
+      ],
+      "url": "https://www.gstatic.com/generate_204",
+      "interval": "3m0s",
+      "tolerance": 60,
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "selector",
+      "tag": "AI-!CN",
+      "outbounds": [
+        {sub_outbounds_!HK}
+      ],
+      "interrupt_exist_connections": true
+    },
+    {
+      "type": "selector",
+      "tag": "Steam-游戏下载",
+      "default": "direct",
+      "interrupt_exist_connections": true,
+      "outbounds": [
+        "direct",
+        "Proxy"
+      ]
+    },
+    {
+      "type": "selector",
+      "tag": "steam!CN",
+      "default": "Proxy",
+      "interrupt_exist_connections": true,
+      "outbounds": [
+        "direct",
+        "Proxy"
+      ]
+    },
+    {
+      "type": "selector",
+      "tag": "Video",
+      "default": "Proxy",
+      "outbounds": [
+        "Proxy",
+        {sub_outbounds_HK},
+        {sub_outbounds_SG}
+      ],
+      "interrupt_exist_connections": true
+    },
+    {sub_outbounds_ALL}
+  ],
+  "route": {
+    "rules": [
+      {
+        "inbound": [
+          "tun-in",
+          "mixed-in"
+        ],
+        "action": "sniff"
+      },
+      {
+        "type": "logical",
+        "mode": "or",
+        "rules": [
+          {
+            "port": 53
+          },
+          {
+            "protocol": "dns"
+          }
+        ],
+        "action": "hijack-dns"
+      },
+      {
+        "clash_mode": "direct",
+        "outbound": "direct"
+      },
+      {
+        "clash_mode": "global",
+        "outbound": "Proxy"
+      },
+      {
+        "rule_set": [
+          "GeoIP-Private",
+          "GeoSite-Private"
+        ],
+        "outbound": "direct"
+      },
+      {
+        "rule_set": "GeoSite-AI-!CN",
+        "outbound": "AI-!CN"
+      },
+      {
+        "domain": [
+          "best.besttelecom.cc"
+        ],
+        "rule_set": [
+          "GeoSite-Youtube",
+          "GeoSite-Netflix"
+        ],
+        "outbound": "Video"
+      },
+      {
+        "domain_suffix": [
+          "steamcontent.com"
+        ],
+        "rule_set": [
+          "GeoSite-SteamGames-Download-CN"
+        ],
+        "outbound": "Steam-游戏下载"
+      },
+      {
+        "rule_set": [
+          "GeoSite-Steam-!CN"
+        ],
+        "outbound": "steam!CN"
+      },
+      {
+        "rule_set": [
+          "GeoSite-Private",
+          "GeoSite-Microsoft-CN",
+          "GeoSite-Apple-CN",
+          "GeoSite-CN",
+          "GeoIP-CN"
+        ],
+        "outbound": "direct"
+      }
+    ],
+    "rule_set": [
+      {
+        "type": "remote",
+        "tag": "GeoSite-Google",
+        "format": "binary",
+        "url": "https://testingcf.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-google.srs",
+        "download_detour": "direct"
+      },
+      {
+        "type": "remote",
+        "tag": "GeoSite-AI-!CN",
+        "format": "binary",
+        "url": "https://testingcf.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-category-ai-!cn.srs",
+        "download_detour": "direct"
+      },
+      {
+        "type": "remote",
+        "tag": "GeoSite-Category-Games-!CN",
+        "format": "binary",
+        "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/category-games-!cn.srs",
+        "download_detour": "direct"
+      },
+      {
+        "type": "remote",
+        "tag": "GeoSite-Steam",
+        "format": "binary",
+        "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/steam.srs",
+        "download_detour": "direct"
+      },
+      {
+        "type": "remote",
+        "tag": "GeoSite-SteamGames-Download-CN",
+        "format": "source",
+        "url": "https://testingcf.jsdelivr.net/gh/Equity0/ClashRule@sing/geosite/steamgames-download@cn.json",
+        "download_detour": "direct"
+      },
+      {
+        "type": "remote",
+        "tag": "GeoSite-Steam-!CN",
+        "format": "source",
+        "url": "https://testingcf.jsdelivr.net/gh/Equity0/ClashRule@sing/geosite/steam-!cn.json",
+        "download_detour": "direct"
+      },
+      {
+        "type": "remote",
+        "tag": "GeoSite-Apple-CN",
+        "format": "binary",
+        "url": "https://testingcf.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-apple@cn.srs",
+        "download_detour": "direct"
+      },
+      {
+        "type": "remote",
+        "tag": "GeoSite-Microsoft-CN",
+        "format": "binary",
+        "url": "https://testingcf.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-microsoft@cn.srs",
+        "download_detour": "direct"
+      },
+      {
+        "type": "remote",
+        "tag": "GeoSite-Youtube",
+        "format": "binary",
+        "url": "https://testingcf.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-youtube.srs",
+        "download_detour": "direct"
+      },
+      {
+        "type": "remote",
+        "tag": "GeoSite-Netflix",
+        "format": "binary",
+        "url": "https://testingcf.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-netflix.srs",
+        "download_detour": "direct"
+      },
+      {
+        "type": "remote",
+        "tag": "Category-Ads",
+        "format": "binary",
+        "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/category-ads-all.srs",
+        "download_detour": "direct"
+      },
+      {
+        "type": "remote",
+        "tag": "GeoSite-Private",
+        "format": "binary",
+        "url": "https://testingcf.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-private.srs",
+        "download_detour": "direct"
+      },
+      {
+        "type": "remote",
+        "tag": "GeoIP-Private",
+        "format": "binary",
+        "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geoip/private.srs",
+        "download_detour": "direct"
+      },
+      {
+        "type": "remote",
+        "tag": "GeoIP-CN",
+        "format": "binary",
+        "url": "https://testingcf.jsdelivr.net/gh/SagerNet/sing-geoip@rule-set/geoip-cn.srs",
+        "download_detour": "direct"
+      },
+      {
+        "type": "remote",
+        "tag": "GeoSite-CN",
+        "format": "binary",
+        "url": "https://testingcf.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-cn.srs",
+        "download_detour": "direct"
+      },
+      {
+        "type": "remote",
+        "tag": "GeoSite-!CN",
+        "format": "binary",
+        "url": "https://testingcf.jsdelivr.net/gh/SagerNet/sing-geosite@rule-set/geosite-geolocation-!cn.srs",
+        "download_detour": "direct"
+      }
+    ],
+    "final": "Proxy",
+    "auto_detect_interface": true
+  },
+  "experimental": {
+    "cache_file": {
+      "enabled": true,
+      "store_fakeip": true,
+      "store_rdrc": false
+    },
+    "clash_api": {
+      "external_controller": "127.0.0.1:9090",
+      "external_ui": "ui",
+      "external_ui_download_url": "https://gh-proxy.com/https://github.com/MetaCubeX/metacubexd/archive/refs/heads/gh-pages.zip",
+      "external_ui_download_detour": "direct",
+      "secret": "1SnuBAQACXbt",
+      "default_mode": "rule"
+    }
+  }
+}
