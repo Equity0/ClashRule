@@ -191,7 +191,7 @@
       "interval": "3m0s",
       "tolerance": 60
     },
-    {sub_outbounds_ALL}
+    {sub_outbounds_config}
   ],
   "route": {
     "rules": [
