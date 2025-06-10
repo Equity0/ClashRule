@@ -20,7 +20,7 @@ python ./main.py 订阅模板 订阅源(可多个)
 
 用于 `outbounds` 中，添加所有出口节点配置信息
 
-`{sub_outbounds_ALL}` 所有节点信息
+`{sub_outbounds_config}` 所有节点的配置信息
 
 ---
 
